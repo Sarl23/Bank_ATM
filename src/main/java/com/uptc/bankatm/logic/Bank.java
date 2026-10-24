@@ -5,6 +5,8 @@
 package com.uptc.bankatm.logic;
 
 import com.uptc.bankatm.exceptions.AccountNotFoundException;
+import com.uptc.bankatm.exceptions.IncorrectKeyException;
+import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.models.BankAccount;
 import java.util.ArrayList;
 
@@ -67,5 +69,31 @@ public class Bank {
                     "Cuenta no encontrada: " + accountNumber);
         }
         return account;
+    }
+    /**
+     * Transfers money from one account to another.
+     * Both accounts are looked up before any money is withdrawn, so funds
+     * are never lost when the destination account does not exist.
+     * Validation of the key, the amount and the balance is delegated to
+     * {@link BankAccount#withdraw(double, String)}.
+     *
+     * @param fromNumber the number of the source account
+     * @param toNumber   the number of the destination account
+     * @param amount     the amount to transfer
+     * @param key        the key of the source account
+     * @throws AccountNotFoundException     if either account does not exist
+     * @throws IncorrectKeyException        if the key does not match the
+     *                                      source account
+     * @throws InsufficientBalanceException if the source account does not
+     *                                      have enough balance
+     */
+    public void transfer(String fromNumber, String toNumber,
+                         double amount, String key)
+            throws AccountNotFoundException, IncorrectKeyException,
+                   InsufficientBalanceException {
+        BankAccount from = findAccount(fromNumber);
+        BankAccount to = findAccount(toNumber);
+        from.withdraw(amount, key);
+        to.deposit(amount);
     }
 }
