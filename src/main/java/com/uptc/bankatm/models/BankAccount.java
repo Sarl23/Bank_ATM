@@ -17,11 +17,13 @@ public class BankAccount {
     private String accountNumber;
     private String passWord;
     private double balance;
+    private double dailyLimit;
 
     public BankAccount(String accountNumber, String passWord, double balance) {
         this.accountNumber = accountNumber;
         this.passWord = passWord;
         this.balance = balance;
+        this.dailyLimit = 1000000;
     }
 
     public String getAccountNumber() {
