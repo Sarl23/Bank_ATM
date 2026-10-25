@@ -26,6 +26,14 @@ public class BankAccount {
         this.dailyLimit = 1000000;
     }
 
+    public void setDailyLimit(double dailyLimit) {
+        this.dailyLimit = dailyLimit;
+    }
+
+    public double getDailyLimit() {
+        return dailyLimit;
+    }
+
     public String getAccountNumber() {
         return accountNumber;
     }
