@@ -4,6 +4,7 @@
  */
 package com.uptc.bankatm.models;
 
+import com.uptc.bankatm.exceptions.DailyLimitExceededException;
 import com.uptc.bankatm.exceptions.IncorrectKeyException;
 import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.exceptions.InvalidAmountException;
@@ -71,7 +72,7 @@ public void deposit(double amount) {
 }
 
 public void withdraw(double amount, String key)
-        throws IncorrectKeyException, InsufficientBalanceException {
+        throws IncorrectKeyException, InsufficientBalanceException, DailyLimitExceededException, InvalidAmountException {
     if (!passWord.equals(key)) {
         throw new IncorrectKeyException("La clave ingresada es incorrecta.");
     }
@@ -81,6 +82,16 @@ public void withdraw(double amount, String key)
     if (amount > balance) {
         throw new InsufficientBalanceException(
                 "Saldo insuficiente. Saldo disponible: " + balance);
+    }
+    /**
+     * exception handling for the daily limit
+     * 
+     * @author karol
+     * @author william
+     * 
+     */
+    if (dailyLimit <= 0 || (dailyLimit-amount)<= 0) {
+        throw new DailyLimitExceededException("Limite diario excedido, saldo permitido a retirar es: " + dailyLimit);
     }
     balance -= amount;
 }
