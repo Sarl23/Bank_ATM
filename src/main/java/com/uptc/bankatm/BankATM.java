@@ -8,6 +8,7 @@ import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.exceptions.InvalidAmountException;
 import com.uptc.bankatm.logic.ATM;
 import com.uptc.bankatm.models.BankAccount;
+import com.uptc.bankatm.view.ATMView;
 
 /**
  *
@@ -18,6 +19,9 @@ public class BankATM {
     public static void main(String[] args) {
         BankAccount account = new BankAccount("001", "1234", 500);
         ATM atm = new ATM(account);
+        ATMView view= new ATMView(atm, account);
+        
+        view.showMenu();
 
 //        System.out.println("Caso 1: clave incorrecta");
 //        tryWithdraw(atm, 100, "0000");
