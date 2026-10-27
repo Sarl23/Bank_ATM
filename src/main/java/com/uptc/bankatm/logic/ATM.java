@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.uptc.bankatm.logic;
+import com.uptc.bankatm.exceptions.AccountLockedException;
 import com.uptc.bankatm.exceptions.IncorrectKeyException;
 import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.models.BankAccount;
@@ -22,8 +23,12 @@ public class ATM {
     
 public void withdraw(double amount, String key)
         throws InsufficientBalanceException, IncorrectKeyException {
-    account.withdraw(amount, key);
-    System.out.println("Retiro exitoso. Nuevo saldo: " + account.getBalance());
+        try {
+            account.withdraw(amount, key);
+            System.out.println("Retiro exitoso. Nuevo saldo: " + account.getBalance());
+        } catch (AccountLockedException ex) {
+            System.getLogger(ATM.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
 }
 
 public void deposit(double amount) {
