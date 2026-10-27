@@ -1,7 +1,7 @@
-package com.uptc.bankatm.logic;
+package com.uptc.bankatm.test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import com.uptc.bankatm.logic.ATM;
 import com.uptc.bankatm.exceptions.IncorrectKeyException;
 import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.exceptions.InvalidAmountException;
