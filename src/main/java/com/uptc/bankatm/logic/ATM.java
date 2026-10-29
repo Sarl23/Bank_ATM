@@ -21,14 +21,19 @@ public class ATM {
     }
     
     
+/**
+ * Withdraws money from the account and prints the new balance.
+ *
+ * @param amount the amount to withdraw
+ * @param key the password typed by the user
+ * @throws InsufficientBalanceException if the amount exceeds the balance
+ * @throws IncorrectKeyException if the password is wrong
+ * @throws AccountLockedException if the account is locked or becomes locked
+ */
 public void withdraw(double amount, String key)
-        throws InsufficientBalanceException, IncorrectKeyException {
-        try {
-            account.withdraw(amount, key);
-            System.out.println("Retiro exitoso. Nuevo saldo: " + account.getBalance());
-        } catch (AccountLockedException ex) {
-            System.getLogger(ATM.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
+        throws InsufficientBalanceException, IncorrectKeyException, AccountLockedException {
+    account.withdraw(amount, key);
+    System.out.println("Retiro exitoso. Nuevo saldo: " + account.getBalance());
 }
 
 public void deposit(double amount) {
