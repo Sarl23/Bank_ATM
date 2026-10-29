@@ -8,6 +8,7 @@ import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.exceptions.InvalidAmountException;
 import com.uptc.bankatm.logic.ATM;
 import com.uptc.bankatm.models.BankAccount;
+import com.uptc.bankatm.exceptions.AccountLockedException;
 
 /**
  *
@@ -39,10 +40,12 @@ public class BankATM {
             System.out.println("Error de saldo: " + e.getMessage());
         } catch (IncorrectKeyException e) {
             System.out.println("Error de clave: " + e.getMessage());
-        } catch (InvalidAmountException e) {
+                } catch (InvalidAmountException e) {
             System.out.println("Error de monto: " + e.getMessage());
+        } catch (AccountLockedException e) {
+            System.out.println("Error de bloqueo: " + e.getMessage());
         } finally {
             System.out.println("Intento procesado.");
         }
+        }
     }
-}
