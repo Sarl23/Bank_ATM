@@ -22,6 +22,21 @@ public class BankATM {
 
         System.out.println("Caso 3: monto negativo");
         tryWithdraw(atm, -50, "1234");
+        
+        System.out.println("Caso 5: bloqueo tras 3 claves incorrectas");
+ATM lockAtm = new ATM(new BankAccount("002", "1234", 500));
+tryWithdraw(lockAtm, 100, "0000");
+tryWithdraw(lockAtm, 100, "0000");
+tryWithdraw(lockAtm, 100, "0000");
+tryWithdraw(lockAtm, 100, "1234");
+
+System.out.println("Caso 6: una clave correcta reinicia el contador");
+ATM resetAtm = new ATM(new BankAccount("003", "1234", 500));
+tryWithdraw(resetAtm, 100, "0000");
+tryWithdraw(resetAtm, 100, "0000");
+tryWithdraw(resetAtm, 100, "1234");
+tryWithdraw(resetAtm, 100, "0000");
+tryWithdraw(resetAtm, 100, "0000");
     }
 
     private static void tryWithdraw(ATM atm, double amount, String key) {
