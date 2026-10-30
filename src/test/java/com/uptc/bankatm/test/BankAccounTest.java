@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import com.uptc.bankatm.exceptions.AccountLockedException;
 
 /**
  *
@@ -74,7 +75,7 @@ public class BankAccounTest {
     }
 
     @Test
-    public void withDrawBankAccount() throws IncorrectKeyException, InsufficientBalanceException {
+    public void withDrawBankAccount() throws IncorrectKeyException, InsufficientBalanceException, AccountLockedException {
         IncorrectKeyException e = assertThrows(IncorrectKeyException.class,
                 () -> account.withdraw(100, "0000"));
         assertNotNull(e);
