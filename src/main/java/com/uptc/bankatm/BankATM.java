@@ -38,6 +38,15 @@ tryWithdraw(resetAtm, 100, "1234");
 tryWithdraw(resetAtm, 100, "0000");
 tryWithdraw(resetAtm, 100, "0000");
     }
+    
+    /**
+ * Tries a withdrawal and prints a message for each possible error,
+ * including the new account locked error.
+ *
+ * @param atm the ATM used for the withdrawal
+ * @param amount the amount to withdraw
+ * @param key the password typed by the user
+ */
 
     private static void tryWithdraw(ATM atm, double amount, String key) {
         try {
