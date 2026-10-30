@@ -20,17 +20,8 @@ public class BankATM {
         BankAccount account = new BankAccount("001", "1234", 500);
         ATM atm = new ATM(account);
 
-//        System.out.println("Caso 1: clave incorrecta");
-//        tryWithdraw(atm, 100, "0000");
-//
-//        System.out.println("Caso 2: monto mayor al saldo");
-//        tryWithdraw(atm, 1000, "1234");
-
         System.out.println("Caso 3: monto negativo");
         tryWithdraw(atm, -50, "1234");
-
-//        System.out.println("Caso 4: retiro válido");
-//        tryWithdraw(atm, 200, "1234");
     }
 
     private static void tryWithdraw(ATM atm, double amount, String key) {
