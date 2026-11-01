@@ -8,6 +8,7 @@ import com.uptc.bankatm.exceptions.DailyLimitExceededException;
 import com.uptc.bankatm.exceptions.IncorrectKeyException;
 import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.exceptions.InvalidAmountException;
+import com.uptc.bankatm.exceptions.AccountLockedException;
 
 /**
  *
@@ -18,8 +19,14 @@ public class BankAccount {
     private String accountNumber;
     private String passWord;
     private double balance;
-    private double dailyLimit;
+		private double dailyLimit;
+    
+    /** Maximum number of consecutive failed attempts before the account is locked. */
+    public static final int MAX_FAILED_ATTEMPTS = 3;
 
+    private int failedAttempts;
+    private boolean locked;
+    
     public BankAccount(String accountNumber, String passWord, double balance) {
         this.accountNumber = accountNumber;
         this.passWord = passWord;
@@ -58,12 +65,28 @@ public class BankAccount {
     public void setBalance(double balance) {
         this.balance = balance;
     }
+    /**
+     * Returns the number of consecutive failed password attempts.
+     *
+     * @return the number of failed attempts
+     */
+    public int getFailedAttempts() {
+        return failedAttempts;
+    }
 
+    /**
+     * Checks whether the account is locked.
+     *
+     * @return true if the account is locked, false otherwise
+     */
+    public boolean isLocked() {
+        return locked;
+    }
     @Override
     public String toString() {
         return "BankAccount{" + "accountNumber=" + accountNumber + ", passWord=" + passWord + ", balance=" + balance + '}';
     }
-
+    
 public void deposit(double amount) {
     if (amount <= 0) {
         throw new InvalidAmountException("El monto debe ser mayor que cero.");
@@ -71,29 +94,42 @@ public void deposit(double amount) {
     balance += amount;
 }
 
-public void withdraw(double amount, String key)
-        throws IncorrectKeyException, InsufficientBalanceException, DailyLimitExceededException, InvalidAmountException {
-    if (!passWord.equals(key)) {
-        throw new IncorrectKeyException("La clave ingresada es incorrecta.");
-    }
-    if (amount <= 0) {
-        throw new InvalidAmountException("El monto debe ser mayor que cero.");
-    }
-    if (amount > balance) {
-        throw new InsufficientBalanceException(
-                "Saldo insuficiente. Saldo disponible: " + balance);
-    }
     /**
-     * exception handling for the daily limit
-     * 
-     * @author karol
-     * @author william
-     * 
+     * Withdraws money from the account. Validates the lock state, password,
+     * amount and balance, in that order. Three consecutive wrong passwords
+     * lock the account, and a correct password resets the failed attempts counter.
+     *
+     * @param amount the amount to withdraw
+     * @param key the password typed by the user
+     * @throws IncorrectKeyException if the password is wrong
+     * @throws InsufficientBalanceException if the amount exceeds the balance
+     * @throws AccountLockedException if the account is locked or becomes locked
      */
-    if (dailyLimit <= 0 || (dailyLimit-amount)<= 0) {
-        throw new DailyLimitExceededException("Limite diario excedido, saldo permitido a retirar es: " + dailyLimit);
+    public void withdraw(double amount, String key)
+            throws IncorrectKeyException, InsufficientBalanceException, AccountLockedException, DailyLimitExceededException, InvalidAmountException {
+        if (locked) {
+            throw new AccountLockedException("La cuenta está bloqueada. No se permiten retiros.");
+        }
+        if (!passWord.equals(key)) {
+            failedAttempts++;
+            if (failedAttempts >= MAX_FAILED_ATTEMPTS) {
+                locked = true;
+                throw new AccountLockedException(
+                        "Cuenta bloqueada tras " + MAX_FAILED_ATTEMPTS + " intentos fallidos consecutivos.");
+            }
+            throw new IncorrectKeyException("La clave ingresada es incorrecta.");
+        }
+        failedAttempts = 0;
+        if (amount <= 0) {
+            throw new InvalidAmountException("El monto debe ser mayor que cero.");
+        }
+        if (amount > balance) {
+            throw new InsufficientBalanceException(
+                    "Saldo insuficiente. Saldo disponible: " + balance);
+        }
+				if (dailyLimit <= 0 || (dailyLimit-amount)<= 0) {
+					throw new DailyLimitExceededException("Limite diario excedido, saldo permitido a retirar es: " + dailyLimit);
+			}
+        balance -= amount;
     }
-    balance -= amount;
-}
-
 }

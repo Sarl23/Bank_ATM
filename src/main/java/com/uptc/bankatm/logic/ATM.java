@@ -4,6 +4,7 @@
  */
 package com.uptc.bankatm.logic;
 import com.uptc.bankatm.exceptions.DailyLimitExceededException;
+import com.uptc.bankatm.exceptions.AccountLockedException;
 import com.uptc.bankatm.exceptions.IncorrectKeyException;
 import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.models.BankAccount;
@@ -24,8 +25,17 @@ public class ATM {
     }
     
     
+/**
+ * Withdraws money from the account and prints the new balance.
+ *
+ * @param amount the amount to withdraw
+ * @param key the password typed by the user
+ * @throws InsufficientBalanceException if the amount exceeds the balance
+ * @throws IncorrectKeyException if the password is wrong
+ * @throws AccountLockedException if the account is locked or becomes locked
+ */
 public void withdraw(double amount, String key)
-        throws InsufficientBalanceException, IncorrectKeyException, DailyLimitExceededException{
+        throws InsufficientBalanceException, IncorrectKeyException, DailyLimitExceededException, AccountLockedException {
     account.withdraw(amount, key);
     transactions.add(new Transaction(Transaction.Type.WITHDRAWAL, amount, account.getBalance()));
     System.out.println("Retiro exitoso. Nuevo saldo: " + account.getBalance());
