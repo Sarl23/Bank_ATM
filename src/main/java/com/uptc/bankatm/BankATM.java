@@ -3,6 +3,7 @@
  */
 package com.uptc.bankatm;
 
+import com.uptc.bankatm.exceptions.DailyLimitExceededException;
 import com.uptc.bankatm.exceptions.IncorrectKeyException;
 import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.exceptions.InvalidAmountException;
@@ -17,7 +18,7 @@ import com.uptc.bankatm.exceptions.AccountLockedException;
 public class BankATM {
 
     public static void main(String[] args) {
-        BankAccount account = new BankAccount("001", "1234", 500);
+        BankAccount account = new BankAccount("001", "1234", 3000000);
         ATM atm = new ATM(account);
 
         System.out.println("Caso 3: monto negativo");
@@ -59,6 +60,8 @@ tryWithdraw(resetAtm, 100, "0000");
             System.out.println("Error de monto: " + e.getMessage());
         } catch (AccountLockedException e) {
             System.out.println("Error de bloqueo: " + e.getMessage());
+        } catch (DailyLimitExceededException e) {
+            System.out.println("Error de retiro: " + e.getMessage());
         } finally {
             System.out.println("Intento procesado.");
         }

@@ -4,6 +4,7 @@
  */
 package com.uptc.bankatm.test;
 
+import com.uptc.bankatm.exceptions.DailyLimitExceededException;
 import com.uptc.bankatm.exceptions.IncorrectKeyException;
 import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.models.BankAccount;
@@ -75,7 +76,7 @@ public class BankAccounTest {
     }
 
     @Test
-    public void withDrawBankAccount() throws IncorrectKeyException, InsufficientBalanceException, AccountLockedException {
+    public void withDrawBankAccount() throws IncorrectKeyException, InsufficientBalanceException, AccountLockedException, DailyLimitExceededException {
         IncorrectKeyException e = assertThrows(IncorrectKeyException.class,
                 () -> account.withdraw(100, "0000"));
         assertNotNull(e);

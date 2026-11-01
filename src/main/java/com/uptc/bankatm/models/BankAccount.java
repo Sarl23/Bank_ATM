@@ -4,6 +4,7 @@
  */
 package com.uptc.bankatm.models;
 
+import com.uptc.bankatm.exceptions.DailyLimitExceededException;
 import com.uptc.bankatm.exceptions.IncorrectKeyException;
 import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.exceptions.InvalidAmountException;
@@ -18,6 +19,7 @@ public class BankAccount {
     private String accountNumber;
     private String passWord;
     private double balance;
+		private double dailyLimit;
     
     /** Maximum number of consecutive failed attempts before the account is locked. */
     public static final int MAX_FAILED_ATTEMPTS = 3;
@@ -29,6 +31,15 @@ public class BankAccount {
         this.accountNumber = accountNumber;
         this.passWord = passWord;
         this.balance = balance;
+        this.dailyLimit = 1000000;
+    }
+
+    public void setDailyLimit(double dailyLimit) {
+        this.dailyLimit = dailyLimit;
+    }
+
+    public double getDailyLimit() {
+        return dailyLimit;
     }
 
     public String getAccountNumber() {
@@ -95,7 +106,7 @@ public void deposit(double amount) {
      * @throws AccountLockedException if the account is locked or becomes locked
      */
     public void withdraw(double amount, String key)
-            throws IncorrectKeyException, InsufficientBalanceException, AccountLockedException {
+            throws IncorrectKeyException, InsufficientBalanceException, AccountLockedException, DailyLimitExceededException, InvalidAmountException {
         if (locked) {
             throw new AccountLockedException("La cuenta está bloqueada. No se permiten retiros.");
         }
@@ -116,6 +127,9 @@ public void deposit(double amount) {
             throw new InsufficientBalanceException(
                     "Saldo insuficiente. Saldo disponible: " + balance);
         }
+				if (dailyLimit <= 0 || (dailyLimit-amount)<= 0) {
+					throw new DailyLimitExceededException("Limite diario excedido, saldo permitido a retirar es: " + dailyLimit);
+			}
         balance -= amount;
     }
 }
