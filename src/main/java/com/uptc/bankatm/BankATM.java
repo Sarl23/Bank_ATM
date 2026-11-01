@@ -3,12 +3,14 @@
  */
 package com.uptc.bankatm;
 
+import com.uptc.bankatm.exceptions.DailyLimitExceededException;
 import com.uptc.bankatm.exceptions.IncorrectKeyException;
 import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.exceptions.InvalidAmountException;
 import com.uptc.bankatm.logic.ATM;
 import com.uptc.bankatm.models.BankAccount;
 import com.uptc.bankatm.view.ATMView;
+import com.uptc.bankatm.exceptions.AccountLockedException;
 
 /**
  *
@@ -17,7 +19,7 @@ import com.uptc.bankatm.view.ATMView;
 public class BankATM {
 
     public static void main(String[] args) {
-        BankAccount account = new BankAccount("001", "1234", 500);
+        BankAccount account = new BankAccount("001", "1234", 3000000);
         ATM atm = new ATM(account);
         ATMView view= new ATMView(atm, account);
         
@@ -31,10 +33,31 @@ public class BankATM {
 
         System.out.println("Caso 3: monto negativo");
         tryWithdraw(atm, -50, "1234");
+        
+        System.out.println("Caso 5: bloqueo tras 3 claves incorrectas");
+ATM lockAtm = new ATM(new BankAccount("002", "1234", 500));
+tryWithdraw(lockAtm, 100, "0000");
+tryWithdraw(lockAtm, 100, "0000");
+tryWithdraw(lockAtm, 100, "0000");
+tryWithdraw(lockAtm, 100, "1234");
 
-//        System.out.println("Caso 4: retiro válido");
-//        tryWithdraw(atm, 200, "1234");
+System.out.println("Caso 6: una clave correcta reinicia el contador");
+ATM resetAtm = new ATM(new BankAccount("003", "1234", 500));
+tryWithdraw(resetAtm, 100, "0000");
+tryWithdraw(resetAtm, 100, "0000");
+tryWithdraw(resetAtm, 100, "1234");
+tryWithdraw(resetAtm, 100, "0000");
+tryWithdraw(resetAtm, 100, "0000");
     }
+    
+    /**
+ * Tries a withdrawal and prints a message for each possible error,
+ * including the new account locked error.
+ *
+ * @param atm the ATM used for the withdrawal
+ * @param amount the amount to withdraw
+ * @param key the password typed by the user
+ */
 
     private static void tryWithdraw(ATM atm, double amount, String key) {
         try {
@@ -43,10 +66,14 @@ public class BankATM {
             System.out.println("Error de saldo: " + e.getMessage());
         } catch (IncorrectKeyException e) {
             System.out.println("Error de clave: " + e.getMessage());
-        } catch (InvalidAmountException e) {
+                } catch (InvalidAmountException e) {
             System.out.println("Error de monto: " + e.getMessage());
+        } catch (AccountLockedException e) {
+            System.out.println("Error de bloqueo: " + e.getMessage());
+        } catch (DailyLimitExceededException e) {
+            System.out.println("Error de retiro: " + e.getMessage());
         } finally {
             System.out.println("Intento procesado.");
         }
+        }
     }
-}
