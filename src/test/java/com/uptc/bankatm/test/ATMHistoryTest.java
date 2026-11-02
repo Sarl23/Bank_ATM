@@ -5,6 +5,8 @@ import com.uptc.bankatm.logic.ATM;
 import com.uptc.bankatm.exceptions.IncorrectKeyException;
 import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.exceptions.InvalidAmountException;
+import com.uptc.bankatm.exceptions.DailyLimitExceededException;
+import com.uptc.bankatm.exceptions.AccountLockedException; 
 import com.uptc.bankatm.models.BankAccount;
 import com.uptc.bankatm.models.Transaction;
 import java.util.List;
@@ -43,7 +45,7 @@ public class ATMHistoryTest {
     }
 
     @Test
-    void successfulWithdrawalIsRecorded() throws IncorrectKeyException {
+    void successfulWithdrawalIsRecorded() throws IncorrectKeyException, DailyLimitExceededException, InsufficientBalanceException, AccountLockedException {
         atm.withdraw(200, "1234");
         List<Transaction> list = atm.getTransactions();
         assertEquals(1, list.size());
@@ -52,7 +54,7 @@ public class ATMHistoryTest {
     }
 
     @Test
-    void operationsAreKeptInOrder() throws IncorrectKeyException {
+    void operationsAreKeptInOrder() throws IncorrectKeyException, DailyLimitExceededException, InsufficientBalanceException, AccountLockedException {
         atm.deposit(100);
         atm.withdraw(50, "1234");
         List<Transaction> list = atm.getTransactions();
