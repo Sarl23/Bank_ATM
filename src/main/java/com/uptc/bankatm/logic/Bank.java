@@ -5,6 +5,7 @@
 package com.uptc.bankatm.logic;
 
 import com.uptc.bankatm.exceptions.AccountNotFoundException;
+import com.uptc.bankatm.exceptions.DailyLimitExceededException;
 import com.uptc.bankatm.exceptions.IncorrectKeyException;
 import com.uptc.bankatm.exceptions.InsufficientBalanceException;
 import com.uptc.bankatm.models.BankAccount;
@@ -87,11 +88,12 @@ public class Bank {
      * account
      * @throws InsufficientBalanceException if the source account does not have
      * enough balance
+     * @throws com.uptc.bankatm.exceptions.DailyLimitExceededException
      */
     public void transfer(String fromNumber, String toNumber,
             double amount, String key)
             throws AccountNotFoundException, IncorrectKeyException,
-            InsufficientBalanceException {
+            InsufficientBalanceException, DailyLimitExceededException {
         BankAccount from = findAccount(fromNumber);
         BankAccount to = findAccount(toNumber);
         from.withdraw(amount, key);
